@@ -12,6 +12,8 @@ class Food:
         # przypisanie węża i planszy żeby ogarniać dostępną przestrzeń
         self.snake = snake
         self.board = board
+
+        # ustawienie początkowego położenia jedzonka
         self.xpos = self.board.xsize // 2
         self.ypos = self.board.ysize // 2 + 4
 

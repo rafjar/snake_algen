@@ -1,6 +1,3 @@
-from board import Board
-
-
 from snake import Snake
 from board import Board
 from food import Food
@@ -19,7 +16,11 @@ class Game_logic:
         self.apple = Food(self.snake, self.board)
         self.print_game()
         self.snake.move_snake()
-        self.apple.randomize_position()
+        self.snake.extend_snake()
+        self.print_game()
+        self.snake.move_snake()
+        self.print_game()
+        self.snake.move_snake()
         self.print_game()
 
     def print_game(self):

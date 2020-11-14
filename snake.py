@@ -1,7 +1,7 @@
 from board import Board
 from enum import Enum
 
-import copy
+from copy import copy
 
 # Enum zawierający kierunki wężowe
 Direction = Enum('Direction', 'UP DOWN LEFT RIGHT')
@@ -55,9 +55,10 @@ class Snake:
         '''
         Poruszenie węża zgodnie z kierunkiem self.move_direction
         '''
-        old_pos = copy.copy(self.position)
+        old_pos = copy(self.position)  # kopia starych położeń
         head_xpos, head_ypos = self.position[0]
 
+        # przesunięcie głowy w odpowiednią stronę
         if self.move_direction == Direction.UP:
             self.position[0] = (head_xpos, head_ypos-1)
         elif self.move_direction == Direction.RIGHT:
@@ -67,6 +68,7 @@ class Snake:
         else:
             self.position[0] = (head_xpos-1, head_ypos)
 
+        # przesunięcie reszty węża
         for i in range(1, len(self.position)):
             self.position[i] = old_pos[i-1]
 
@@ -74,4 +76,4 @@ class Snake:
         '''
         Jak wąż zje jedzonko, to trzeba go wydłużyć
         '''
-        pass
+        self.position.append(self.position[-1])
