@@ -1,27 +1,23 @@
 from snake import Snake
 from board import Board
 from food import Food
+from time import sleep
 
 
 class Game_logic:
-    def __init__(self):
+    def __init__(self, print_timeout=False):
         '''
         Cała logika gry!
         Ważne jest zliczanie punktów oraz liczby wykonanych przez węża ruchów
         '''
+        self.game_over = False
+        self.print_timeout = print_timeout  # co ile odświeżać obraz - czas w sekundach
         self.points = 0
         self.move_count = 0
         self.board = Board()
         self.snake = Snake(self.board)
         self.apple = Food(self.snake, self.board)
-        self.print_game()
-        self.snake.move_snake()
-        self.snake.extend_snake()
-        self.print_game()
-        self.snake.move_snake()
-        self.print_game()
-        self.snake.move_snake()
-        self.print_game()
+        self.run_game()
 
     def print_game(self):
         '''
@@ -47,12 +43,59 @@ class Game_logic:
                 else:
                     print(' ', end='')
             print('#')
+        print('#' * (self.board.xsize+2))
 
-        # print('#' * (self.board.xsize+2)) # odkomenotwać kiedyś
+    def check_collisions(self):
+        '''
+        Koniec gry gdy wąż uderzy w ścianę lub swój ogon
+        '''
+        head_xpos, head_ypos = self.snake.position[0]
+        if head_xpos == -1 or head_xpos == self.board.xsize \
+                or head_ypos == -1 or head_ypos == self.board.ysize \
+                or (head_xpos, head_ypos) in self.snake.position[1:]:
+            self.game_over = True
 
-        # To tylko do ogarniania numerów kolumn
-        # później odkomentować to na górze
-        print('#', end='')
-        for i in range(self.board.xsize):
-            print(i % 10, end='')
-        print('#')
+    def check_food(self):
+        '''
+        Sprawdzenie czy wąż zjadł jedzonko
+        Jeśli tak, to zwiększ punkty, wylosuj nowe jedzonko i wydłuż węża
+        '''
+        if (self.apple.xpos, self.apple.ypos) in self.snake.position:
+            self.points += 1
+            self.apple.randomize_position()
+            self.snake.extend_snake()
+
+    def move_snake(self):
+        '''
+        Poruszenie węża o jedno pole
+        '''
+        self.move_count += 1
+        self.snake.move_snake()
+
+    def set_snake_direction(self, direction):
+        '''
+        Zmiana kierunku poruszania się węża
+        '''
+        self.snake.set_direction(direction)
+
+    def generate_direction(self):
+        '''
+        Odpytywanie sieci neuronowej w celu wyznaczenia
+        kierunku poruszania się wężyka.
+        Funkcja powinna zwracać 0, 1 lub 2.
+        '''
+        pass
+
+    def run_game(self):
+        '''
+        Funkcja zawierająca pętlę wykonania gry
+        '''
+        while not self.game_over:
+            if self.print_timeout:
+                self.print_game()
+                sleep(self.print_timeout)
+
+            self.set_snake_direction(self.generate_direction())
+            self.move_snake()
+            self.check_food()
+            self.check_collisions()
