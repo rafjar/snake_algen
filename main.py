@@ -1,5 +1,4 @@
 from game_logic import Game_logic
-from game_logic import *
 
 
 def main():

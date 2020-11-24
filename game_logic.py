@@ -1,7 +1,8 @@
-from snake import Snake
+from snake import *
 from board import Board
 from food import Food
 from time import sleep
+from math import atan2, pi
 
 
 class Game_logic:
@@ -72,6 +73,30 @@ class Game_logic:
         self.move_count += 1
         self.snake.move_snake()
 
+    def calc_food_snake_angle(self):
+        '''
+        Wyznaczenie kąta pomiędzy wężem a jabłkiem
+        względem węża
+        '''
+        head_xpos, head_ypos = self.snake.position[0]
+
+        if self.snake.move_direction == Direction.UP:
+            x = self.apple.xpos - head_xpos
+            y = head_ypos - self.apple.ypos
+            return atan2(y, x)
+        elif self.snake.move_direction == Direction.DOWN:
+            x = head_xpos - self.apple.xpos
+            y = self.apple.ypos - head_ypos
+            return atan2(y, x)
+        elif self.snake.move_direction == Direction.RIGHT:
+            y = self.apple.xpos - head_xpos
+            x = self.apple.ypos - head_ypos
+            return atan2(y, x)
+        elif self.snake.move_direction == Direction.LEFT:
+            y = head_xpos - self.apple.xpos
+            x = head_ypos - self.apple.ypos
+            return atan2(y, x)
+
     def set_snake_direction(self, direction):
         '''
         Zmiana kierunku poruszania się węża
@@ -95,6 +120,7 @@ class Game_logic:
                 self.print_game()
                 sleep(self.print_timeout)
 
+            self.calc_food_snake_angle()
             self.set_snake_direction(self.generate_direction())
             self.move_snake()
             self.check_food()
