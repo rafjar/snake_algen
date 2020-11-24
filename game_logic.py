@@ -83,19 +83,20 @@ class Game_logic:
         if self.snake.move_direction == Direction.UP:
             x = self.apple.xpos - head_xpos
             y = head_ypos - self.apple.ypos
-            return atan2(y, x)
+
         elif self.snake.move_direction == Direction.DOWN:
             x = head_xpos - self.apple.xpos
             y = self.apple.ypos - head_ypos
-            return atan2(y, x)
+
         elif self.snake.move_direction == Direction.RIGHT:
             y = self.apple.xpos - head_xpos
             x = self.apple.ypos - head_ypos
-            return atan2(y, x)
-        elif self.snake.move_direction == Direction.LEFT:
+
+        else:
             y = head_xpos - self.apple.xpos
             x = head_ypos - self.apple.ypos
-            return atan2(y, x)
+
+        return atan2(y, x)
 
     def set_snake_direction(self, direction):
         '''
