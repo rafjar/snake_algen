@@ -89,7 +89,7 @@ class Game_logic:
 
         elif self.snake.move_direction == Direction.DOWN:
             dist = [x-head_xpos for x, y in self.snake.position[1:] if x > head_xpos and y == head_ypos]
-            dist.append(self.board.xsize-head_xpos)
+            dist.append(self.board.xsize - head_xpos)
             return min(dist) / normalize
 
         elif self.snake.move_direction == Direction.RIGHT:
@@ -99,22 +99,66 @@ class Game_logic:
 
         else:
             dist = [y-head_ypos for x, y in self.snake.position[1:] if y > head_ypos and x == head_xpos]
-            dist.append(self.board.ysize-head_ypos)
+            dist.append(self.board.ysize - head_ypos)
             return min(dist) / normalize
 
     def distance_right_obstacle(self):
         '''
         Wyznaczenie odległość od przeszkody z 
-        prawej strony względem węża
+        prawej strony względem węża.
+        Zwraca wartość znormalizowaną!!!
         '''
-        pass
+        head_xpos, head_ypos = self.snake.position[0]
+        normalize = max(self.board.xsize, self.board.ysize)
+
+        if self.snake.move_direction == Direction.UP:
+            dist = [x-head_xpos for x, y in self.snake.position[1:] if x > head_xpos and y == head_ypos]
+            dist.append(self.board.xsize - head_xpos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.DOWN:
+            dist = [head_xpos-x for x, y in self.snake.position[1:] if x < head_xpos and y == head_ypos]
+            dist.append(head_xpos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.RIGHT:
+            dist = [y-head_ypos for x, y in self.snake.position[1:] if y > head_ypos and x == head_xpos]
+            dist.append(self.board.ysize - head_ypos)
+            return min(dist) / normalize
+
+        else:
+            dist = [head_ypos-y for x, y in self.snake.position[1:] if y < head_ypos and x == head_xpos]
+            dist.append(head_ypos)
+            return min(dist) / normalize
 
     def distance_front_obstacle(self):
         '''
         Wyznaczenie odległość od przeszkody
-        znajdującej się przed wężem
+        znajdującej się przed wężem.
+        Zwraca wartość znormalizowaną!!!
         '''
-        pass
+        head_xpos, head_ypos = self.snake.position[0]
+        normalize = max(self.board.xsize, self.board.ysize)
+
+        if self.snake.move_direction == Direction.UP:
+            dist = [head_ypos-y for x, y in self.snake.position[1:] if y < head_ypos and x == head_xpos]
+            dist.append(head_ypos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.DOWN:
+            dist = [y-head_ypos for x, y in self.snake.position[1:] if y > head_ypos and x == head_xpos]
+            dist.append(self.board.ysize - head_ypos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.RIGHT:
+            dist = [x-head_xpos for x, y in self.snake.position[1:] if x > head_xpos and y == head_ypos]
+            dist.append(self.board.xsize - head_xpos)
+            return min(dist) / normalize
+
+        else:
+            dist = [head_xpos-x for x, y in self.snake.position[1:] if x < head_xpos and y == head_ypos]
+            dist.append(head_xpos)
+            return min(dist) / normalize
 
     def calc_food_snake_angle(self):
         '''
