@@ -73,6 +73,49 @@ class Game_logic:
         self.move_count += 1
         self.snake.move_snake()
 
+    def distance_left_obstacle(self):
+        '''
+        Wyznaczenie odległość od przeszkody z 
+        lewej strony względem węża. 
+        Zwraca wartość znormalizowaną!!!
+        '''
+        head_xpos, head_ypos = self.snake.position[0]
+        normalize = max(self.board.xsize, self.board.ysize)
+
+        if self.snake.move_direction == Direction.UP:
+            dist = [head_xpos-x for x, y in self.snake.position[1:] if x < head_xpos and y == head_ypos]
+            dist.append(head_xpos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.DOWN:
+            dist = [x-head_xpos for x, y in self.snake.position[1:] if x > head_xpos and y == head_ypos]
+            dist.append(self.board.xsize-head_xpos)
+            return min(dist) / normalize
+
+        elif self.snake.move_direction == Direction.RIGHT:
+            dist = [head_ypos-y for x, y in self.snake.position[1:] if y < head_ypos and x == head_xpos]
+            dist.append(head_ypos)
+            return min(dist) / normalize
+
+        else:
+            dist = [y-head_ypos for x, y in self.snake.position[1:] if y > head_ypos and x == head_xpos]
+            dist.append(self.board.ysize-head_ypos)
+            return min(dist) / normalize
+
+    def distance_right_obstacle(self):
+        '''
+        Wyznaczenie odległość od przeszkody z 
+        prawej strony względem węża
+        '''
+        pass
+
+    def distance_front_obstacle(self):
+        '''
+        Wyznaczenie odległość od przeszkody
+        znajdującej się przed wężem
+        '''
+        pass
+
     def calc_food_snake_angle(self):
         '''
         Wyznaczenie kąta pomiędzy wężem a jabłkiem
@@ -122,6 +165,7 @@ class Game_logic:
                 sleep(self.print_timeout)
 
             self.calc_food_snake_angle()
+            print('Left obstacle:', self.distance_left_obstacle())
             self.set_snake_direction(self.generate_direction())
             self.move_snake()
             self.check_food()
