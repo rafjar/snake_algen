@@ -1,8 +1,9 @@
-from game_logic import Game_logic
+from genetic_algorithm import *
 
 
 def main():
-    game_logic = Game_logic(0.2)
+    population
+    print(population)
 
 
 if __name__ == '__main__':

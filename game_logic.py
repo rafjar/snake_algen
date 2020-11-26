@@ -21,9 +21,11 @@ class Game_logic:
         self.apple = Food(self.snake, self.board)
         self.neural_network = NeuralNetwork()
         self.last_food_move_number = 0  # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
-        self.run_game()
 
     def clear(self, print_timeout=False):
+        '''
+        Przywrócenie game_logic do wartości podstawowych
+        '''
         self.game_over = False
         self.points = 0
         self.move_count = 0
