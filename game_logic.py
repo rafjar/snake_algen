@@ -23,6 +23,14 @@ class Game_logic:
         self.last_food_move_number = 0 # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
         self.run_game()
 
+    def clear(self):
+        self.game_over = False
+        self.points = 0
+        self.move_count = 0
+        self.snake = Snake(self.board)
+        self.apple = Food(self.snake, self.board)
+        self.last_food_move_number = 0 # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
+        
     def print_game(self):
         '''
         Narysowanie gry na ekraniku
@@ -223,3 +231,5 @@ class Game_logic:
             self.check_food()
             self.check_collisions()
             self.check_starve()
+        
+        return self.points, self.move_count
