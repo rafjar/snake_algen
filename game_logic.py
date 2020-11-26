@@ -3,6 +3,7 @@ from board import Board
 from food import Food
 from time import sleep
 from math import atan2, pi
+from neural_net import *
 
 
 class Game_logic:
@@ -18,6 +19,7 @@ class Game_logic:
         self.board = Board()
         self.snake = Snake(self.board)
         self.apple = Food(self.snake, self.board)
+        self.neural_network = NeuralNetwork()
         self.run_game()
 
     def print_game(self):
@@ -197,7 +199,8 @@ class Game_logic:
         kierunku poruszania się wężyka.
         Funkcja powinna zwracać 0, 1 lub 2.
         '''
-        pass
+        input = [self.distance_left_obstacle(), self.distance_right_obstacle(), self.distance_front_obstacle(), self.calc_food_snake_angle()]
+        return np.argmax(self.neural_network(input), axis=-1)
 
     def run_game(self):
         '''
@@ -208,9 +211,8 @@ class Game_logic:
                 self.print_game()
                 sleep(self.print_timeout)
 
-            self.calc_food_snake_angle()
-            print('Left obstacle:', self.distance_left_obstacle())
-            self.set_snake_direction(self.generate_direction())
+            direction = self.generate_direction()
+            self.set_snake_direction(direction)
             self.move_snake()
             self.check_food()
             self.check_collisions()
