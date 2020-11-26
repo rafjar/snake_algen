@@ -1,4 +1,5 @@
 import numpy as np
+import scipy.special
 
 
 def relu(matrix):
@@ -26,7 +27,7 @@ class NeuralNetwork:
             output = output @ weight
             relu(output)
 
-        return output
+        return scipy.special.softmax(output, axis=-1)
 
     def set_weights(self, weights):
         self.weights = weights
