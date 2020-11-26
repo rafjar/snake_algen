@@ -20,17 +20,17 @@ class Game_logic:
         self.snake = Snake(self.board)
         self.apple = Food(self.snake, self.board)
         self.neural_network = NeuralNetwork()
-        self.last_food_move_number = 0 # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
+        self.last_food_move_number = 0  # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
         self.run_game()
 
-    def clear(self):
+    def clear(self, print_timeout=False):
         self.game_over = False
         self.points = 0
         self.move_count = 0
         self.snake = Snake(self.board)
         self.apple = Food(self.snake, self.board)
-        self.last_food_move_number = 0 # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
-        self.print_timeout = False  # co ile odświeżać obraz - czas w sekundach
+        self.last_food_move_number = 0  # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
+        self.print_timeout = print_timeout  # co ile odświeżać obraz - czas w sekundach
 
     def print_game(self):
         '''
@@ -79,10 +79,10 @@ class Game_logic:
             self.snake.extend_snake()
             self.last_food_move_number = self.move_count
 
-    def check_starve(self, C = 100):
+    def check_starve(self, C=100):
         if self.move_count-self.last_food_move_number > C:
             self.game_over = True
-    
+
     def move_snake(self):
         '''
         Poruszenie węża o jedno pole
@@ -232,5 +232,5 @@ class Game_logic:
             self.check_food()
             self.check_collisions()
             self.check_starve()
-        
+
         return self.points, self.move_count
