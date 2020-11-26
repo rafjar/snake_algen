@@ -30,7 +30,8 @@ class Game_logic:
         self.snake = Snake(self.board)
         self.apple = Food(self.snake, self.board)
         self.last_food_move_number = 0 # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
-        
+        self.print_timeout = False  # co ile odświeżać obraz - czas w sekundach
+
     def print_game(self):
         '''
         Narysowanie gry na ekraniku
