@@ -3,8 +3,13 @@ from game_logic import *
 
 
 def main():
-    game_logic = Game_logic(0.2)
-    game_logic.run_game()
+    algorithm = GeneticAlgorith(population_size=100)
+
+    for _ in range(50):
+        algorithm.evolve_population()
+
+    algorithm.population[10].clear(0.2)
+    algorithm.population[10].run_game()
 
 
 if __name__ == '__main__':

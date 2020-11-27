@@ -18,20 +18,20 @@ class GeneticAlgorith:
         '''
         return points**2 / (1 + move_count)
 
-    def flatten_weights(weights):
+    def flatten_weights(self, weights):
         '''
         Zwija wagi sieci neuronowej do tablicy 1D
         '''
         weights1, weights2 = weights
-        return np.hstack(weights1, weights2)
+        return np.hstack((weights1.flatten(), weights2.flatten()))
 
-    def unflatten_weights(weights):
+    def unflatten_weights(self, weights):
         '''
         Rozwija wagi sieci neuronowej formatu oczekiwanego przez sieć
         '''
         weights1, weights2 = weights[:4*6], weights[4*6:]
-        weights1.reshape((4, 6))
-        weights2.reshape((6, 3))
+        weights1 = np.reshape(weights1, (4, 6))
+        weights2 = np.reshape(weights2, (6, 3))
         return [weights1, weights2]
 
     def selection(self, fitness_functions):
@@ -46,8 +46,8 @@ class GeneticAlgorith:
         new_genotypes = []
         for _ in range(self.population_size):
             rand = np.random.random()
-            indx, = np.where(fit == fit[fit >= rand][0])[0]
-            new_genotypes.append(self.population[indx].get_neural_weights)
+            indx = np.argmax(fit >= rand)  # np.where(fit == fit[fit >= rand][0])[0][0]
+            new_genotypes.append(self.population[indx].get_neural_weights())
 
         return new_genotypes
 
@@ -91,4 +91,22 @@ class GeneticAlgorith:
         return genotype
 
     def evolve_population(self):
-        pass
+        '''
+        Pojedyncza ewolucja całej populacji
+        '''
+        # Selekcja
+        fitness_functions = [self.fitness_function(*game_logic.run_game()) for game_logic in self.population]
+        new_population_weights = self.selection(fitness_functions)
+
+        # Krzyżowanie
+        new_population_weights = list(map(self.flatten_weights, new_population_weights))
+        new_population_weights = self.crossing(new_population_weights)
+
+        # Mutacja
+        new_population_weights = list(map(self.mutation, new_population_weights))
+
+        # Nadanie poprawnych wymiarów wagom i przypisanie ich osobnikom
+        new_population_weights = [self.unflatten_weights(flat_weights) for flat_weights in new_population_weights]
+        for new_weight, game_logic in zip(new_population_weights, self.population):
+            game_logic.set_neural_weights(new_weight)
+            game_logic.clear()
