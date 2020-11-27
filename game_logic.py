@@ -34,6 +34,18 @@ class Game_logic:
         self.last_food_move_number = 0  # na jakiej liczbie był licznik ruchów, gdy wąż ostatnio jadł
         self.print_timeout = print_timeout  # co ile odświeżać obraz - czas w sekundach
 
+    def get_neural_weights(self):
+        '''
+        Funkcja zwracająca wagi sieci neuronowej
+        '''
+        return self.neural_network.get_weights()
+
+    def set_neural_weights(self, weights):
+        '''
+        Przypisanie wag sieci neuronowej
+        '''
+        self.neural_network.set_weights(weights)
+
     def print_game(self):
         '''
         Narysowanie gry na ekraniku
