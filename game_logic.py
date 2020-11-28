@@ -231,6 +231,12 @@ class Game_logic:
         input = [self.distance_left_obstacle(), self.distance_right_obstacle(), self.distance_front_obstacle(), self.calc_food_snake_angle()]
         return np.argmax(self.neural_network(input), axis=-1)
 
+    def get_points(self):
+        return self.points
+
+    def get_move_count(self):
+        return self.move_count
+
     def run_game(self):
         '''
         Funkcja zawierająca pętlę wykonania gry

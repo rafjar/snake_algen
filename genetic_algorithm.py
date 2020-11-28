@@ -1,16 +1,24 @@
 from game_logic import *
 import numpy as np
+from tqdm import tqdm
 
 
-class GeneticAlgorith:
+class GeneticAlgorithm:
     def __init__(self, population_size=50, max_generation=100):
         '''
         Algorytm genetyczny
         '''
         self.population_size = population_size
         self.max_generation = max_generation
+        self.generation_points = []  # Ile punktów zdobyła dana generacja
+        self.generation_move_count = []  # Ile kroków wykonała dana generacja
+        self.generation_fitness_function = []  # Ile wynosiła funkcja dopasowania dla danej generacji
+        self.generation_weights = []
 
         self.population = [Game_logic() for _ in range(self.population_size)]
+
+        for _ in tqdm(range(self.max_generation)):
+            self.evolve_population()
 
     def fitness_function(self, points, move_count):
         '''
@@ -77,7 +85,7 @@ class GeneticAlgorith:
 
         return new_genotypes
 
-    def mutation(self, genotype, probability=1/1000):
+    def mutation(self, genotype, probability=1/100):
         '''
         Mutacja pojedynczego genotypu z
         ustalonym prawdopodobienstwem.
@@ -86,7 +94,7 @@ class GeneticAlgorith:
         for indx in range(len(genotype)):
             rand = np.random.random()
             if rand < probability:
-                genotype[indx] = np.random.random()
+                genotype[indx] = np.random.uniform(-1, 1)
 
         return genotype
 
@@ -98,6 +106,9 @@ class GeneticAlgorith:
         fitness_functions = [self.fitness_function(*game_logic.run_game()) for game_logic in self.population]
         new_population_weights = self.selection(fitness_functions)
 
+        # Zapisanie wag poprzedniej generacji
+        self.generation_weights.append([game_logic.get_neural_weights() for game_logic in self.population])
+
         # Krzyżowanie
         new_population_weights = list(map(self.flatten_weights, new_population_weights))
         new_population_weights = self.crossing(new_population_weights)
@@ -105,8 +116,30 @@ class GeneticAlgorith:
         # Mutacja
         new_population_weights = list(map(self.mutation, new_population_weights))
 
+        # Zapisanie punktów i kroków wykonanych przez osobników z tej generacji
+        self.generation_points.append([game_logic.get_points() for game_logic in self.population])
+        self.generation_move_count.append([game_logic.get_move_count() for game_logic in self.population])
+        self.generation_fitness_function.append(fitness_functions)
+
         # Nadanie poprawnych wymiarów wagom i przypisanie ich osobnikom
         new_population_weights = [self.unflatten_weights(flat_weights) for flat_weights in new_population_weights]
         for new_weight, game_logic in zip(new_population_weights, self.population):
             game_logic.set_neural_weights(new_weight)
             game_logic.clear()
+
+    def get_generations_points(self):
+        '''
+        Zwraca tablicę z punktami zdobytymi przez 
+        każdego z osobników z danej generacji
+        '''
+        return self.generation_points
+
+    def get_generations_move_count(self):
+        '''
+        Zwraca tablicę z krokami wykonanymi przez 
+        każdego z osobników z danej generacji
+        '''
+        return self.generation_move_count
+
+    def get_best_snake(self):
+        indx = np.argmax(self.generation_points[-1])

@@ -17,8 +17,8 @@ class NeuralNetwork:
         self.hidden_layer_size = layer2
         self.output_size = layer3
 
-        weights1 = np.random.random((layer1, layer2))
-        weights2 = np.random.random((layer2, layer3))
+        weights1 = np.random.uniform(-1, 1, (layer1, layer2))
+        weights2 = np.random.uniform(-1, 1, (layer2, layer3))
         self.weights = [weights1, weights2]
 
     def __call__(self, input):
