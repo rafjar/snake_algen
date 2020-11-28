@@ -2,7 +2,9 @@ from genetic_algorithm import *
 
 
 def main():
-    algorithm = GeneticAlgorithm()
+    algorithm = GeneticAlgorithm(max_generation=50)
+    best_snake = algorithm.get_best_snake(0.2)
+    best_snake.run_game()
 
 
 if __name__ == '__main__':

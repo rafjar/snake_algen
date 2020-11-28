@@ -93,8 +93,13 @@ class Game_logic:
             self.snake.extend_snake()
             self.last_food_move_number = self.move_count
 
-    def check_starve(self, C=100):
-        if self.move_count-self.last_food_move_number > C:
+    def check_starve(self, max_moves_diff=100):
+        '''
+        Sprawdza czy węż się nie zapętlił. 
+        Jeśli wąż nic nie zjadł od ostatnich 'max_moves_diff'
+        kroków, to umiera
+        '''
+        if self.move_count-self.last_food_move_number > max_moves_diff:
             self.game_over = True
 
     def move_snake(self):
