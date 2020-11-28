@@ -58,7 +58,7 @@ class GeneticAlgorithm:
         new_genotypes = []
         for _ in range(self.population_size):
             rand = np.random.random()
-            indx = np.argmax(fit >= rand)  # np.where(fit == fit[fit >= rand][0])[0][0]
+            indx = np.argmax(fit >= rand)
             new_genotypes.append(self.population[indx].get_neural_weights())
 
         return new_genotypes
@@ -79,7 +79,10 @@ class GeneticAlgorithm:
             while indx1 == indx2:
                 indx2 = np.random.randint(len(genotypes))
 
-            genotype1, genotype2 = genotypes.pop(indx1), genotypes.pop(indx2-1)
+            if indx1 < indx2:
+                genotype1, genotype2 = genotypes.pop(indx1), genotypes.pop(indx2-1)
+            else:
+                genotype1, genotype2 = genotypes.pop(indx1), genotypes.pop(indx2)
 
             crossing_indx = np.random.randint(len(genotype1))
             genotype1[:crossing_indx], genotype2[:crossing_indx] = genotype2[:crossing_indx], genotype1[:crossing_indx]
