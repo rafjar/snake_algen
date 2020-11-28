@@ -63,7 +63,7 @@ class GeneticAlgorithm:
 
         return new_genotypes
 
-    def crossing(self, genotypes: list):
+    def crossing(self, genotypes: list, probability=0.8):
         '''
         Krzyżowanie osobników populacji
         Genotypy powinny być płaskimi tablicami 1D
@@ -85,7 +85,8 @@ class GeneticAlgorithm:
                 genotype1, genotype2 = genotypes.pop(indx1), genotypes.pop(indx2)
 
             crossing_indx = np.random.randint(len(genotype1))
-            genotype1[:crossing_indx], genotype2[:crossing_indx] = genotype2[:crossing_indx], genotype1[:crossing_indx]
+            if np.random.random() < probability:
+                genotype1[:crossing_indx], genotype2[:crossing_indx] = genotype2[:crossing_indx], genotype1[:crossing_indx]
 
             new_genotypes.append(genotype1)
             new_genotypes.append(genotype2)
@@ -158,7 +159,7 @@ class GeneticAlgorithm:
         '''
         points = []
         for game_logic in self.population:
-            pts, moves = game_logic.run_game()
+            pts, move_count = game_logic.run_game()
             points.append(pts)
             game_logic.clear(print_timeout)
 
